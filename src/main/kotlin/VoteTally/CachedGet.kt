@@ -100,6 +100,10 @@ object cache {
         var doc = Jsoup.parse(contents, url.address)
         if (doc.select(".message").count() == 0 && doc.select(".threadmark_item").count() == 0) {
             println("Error while fetching ${url.address}, backing off")
+            if (backoff >= 32) {
+                println("Giving up")
+                throw IllegalArgumentException("Bad fetch: ${url.address}")
+            }
             refetches.inc()
             rateLimiter.acquire(backoff)
             return populateCache(url, backoff * 2)

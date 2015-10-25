@@ -148,7 +148,6 @@ object cacheGCThread: Thread() {
             for (file in cache.cacheDir.listFiles()) {
                 val url = URLDecoder.decode(file.name, "UTF-8")
                 val urlObj = parseCacheUrl(url)
-                println("GC: Considering $urlObj")
                 val mtime = file.lastModified()
                 if (mtime + urlObj.maxAge < now) {
                     println("GC: Deleting $urlObj")

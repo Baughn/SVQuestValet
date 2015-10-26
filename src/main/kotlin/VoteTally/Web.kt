@@ -35,7 +35,7 @@ val fetches = CacheBuilder.newBuilder()
 
 fun main(args: Array<String>) {
     // TODO: Parse the port from a flag.
-    port(1234)
+    port(2222)
     externalStaticFileLocation("src/main/resources/static")
     staticFileLocation("static")
 

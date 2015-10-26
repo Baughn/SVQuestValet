@@ -98,7 +98,7 @@ object cache {
         println("Fetching ${url.address}")
         val contents = Unirest.get(url.address).header("User-Agent", "SVQuestValet").asString().body
         var doc = Jsoup.parse(contents, url.address)
-        if (doc.select(".message").count() == 0 && doc.select(".threadmark_item").count() == 0) {
+        if (doc.select(".message").count() == 0 && doc.select(".threadmarkItem").count() == 0) {
             println("Error while fetching ${url.address}, backing off")
             if (backoff >= 32) {
                 println("Giving up")

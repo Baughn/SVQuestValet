@@ -127,7 +127,7 @@ public class Threadmarks(url: String) {
     val cleanUrl = baseUrl(url)
     val doc = cache[ThreadmarkUrl(cleanUrl)]
 
-    val threadmarks = doc.select(".threadmark_item a").map {
+    val threadmarks = doc.select(".threadmarkItem a").map {
         val post = postRegex.match(it.attr("href"))
         if (post == null) {
             println("Bad threadmark: ${it.attr("href")}")

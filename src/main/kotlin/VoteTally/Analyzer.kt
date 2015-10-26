@@ -111,6 +111,8 @@ class Election(posts: List<Post>) {
 //            println(it)
 //            println(voteRegex.matches(it))
             voteRegex.matches(it)
+        }.map {
+            it.replace("&nbsp;", " ").trim()
         }
     }
 }

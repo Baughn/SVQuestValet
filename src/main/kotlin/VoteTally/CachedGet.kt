@@ -23,7 +23,7 @@ internal fun parseCacheUrl(url: String): Url {
     if (url.endsWith("/threadmarks")) {
         return ThreadmarkUrl(url)
     } else if (pageRegex.matches(url)) {
-        val groups = pageRegex.match(url)!!.groups
+        val groups = pageRegex.find(url)!!.groups
         return PageUrl(groups[1]!!.value, groups[2]!!.value.toInt())
     } else {
         return SomeRandomUrl(url)
@@ -110,7 +110,7 @@ object cache {
         }
         // Valid doc. Write it to the cache.
         val file = File(cacheDir, url.cacheName)
-        file.writeText(contents, "UTF-8")
+        file.writeText(contents)
         return doc
     }
 

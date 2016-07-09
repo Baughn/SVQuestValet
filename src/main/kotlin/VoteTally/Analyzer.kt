@@ -7,9 +7,7 @@ import org.jsoup.nodes.Element
 import org.jsoup.safety.Whitelist
 import java.net.URL
 import java.util.*
-import java.util.concurrent.ForkJoinPool
 import java.util.concurrent.RecursiveTask
-import kotlin.text.RegexOption
 
 
 fun baseUrl(s: String): String {
@@ -17,7 +15,7 @@ fun baseUrl(s: String): String {
     if (url.host != "forums.sufficientvelocity.com" && url.host != "forums.spacebattles.com")
         throw IllegalArgumentException("Cannot parse host ${url.host}")
     val dirs = url.path.splitToSequence('/')
-    if (dirs.count() < 3 || dirs.elementAt(1) != "threads" || dirs.elementAt(2).length() == 0)
+    if (dirs.count() < 3 || dirs.elementAt(1) != "threads" || dirs.elementAt(2).length == 0)
         throw IllegalArgumentException("Can only scrape thread URLs, not ${url.path}")
     return "https://${url.host}/${dirs.elementAt(1)}/${dirs.elementAt(2)}"
 }
@@ -65,15 +63,15 @@ class Election(posts: List<Post>) {
                 byText[text] = VoteSet(text, 1.0, ArrayList<Post>().apply { add(votePost[author]!!) })
             }
         }
-        summary.addAll(byText.values())
+        summary.addAll(byText.values)
     }
 
     private fun parseVote(text: List<String>): String {
-        return StringBuilder {
+        return StringBuilder().apply {
             text.forEach done@ {
                 append("\n")
                 // Is this a "plan" vote?
-                val defer = deferRegex.match(it)
+                val defer = deferRegex.find(it)
                 if (defer != null) {
                     val target = defer.groups[1]!!.value
                     if (target in votes) {
@@ -86,7 +84,7 @@ class Election(posts: List<Post>) {
                 }
                 // Ok, how about a heuristic deferred vote?
                 // This regex will match just about anything.
-                val heuristicDefer = heuristicDeferRegex.match(it)
+                val heuristicDefer = heuristicDeferRegex.find(it)
 //                println(heuristicDefer != null)
 //                println(it)
                 if (heuristicDefer != null) {
@@ -124,13 +122,13 @@ data class Post(val href: String, val content: String, val post: Int, val author
 
 
 private val postRegex = "threads/[^/]+/(page-[0-9]+)?#post-([0-9]+)".toRegex()
-public class Threadmarks(url: String) {
+class Threadmarks(url: String) {
 
     val cleanUrl = baseUrl(url)
     val doc = cache[ThreadmarkUrl(cleanUrl)]
 
     val threadmarks = doc.select(".threadmarkItem a").map {
-        val post = postRegex.match(it.attr("href"))
+        val post = postRegex.find(it.attr("href"))
         if (post == null) {
             println("Bad threadmark: ${it.attr("href")}")
             Threadmark("", -1, -1, it.text())
